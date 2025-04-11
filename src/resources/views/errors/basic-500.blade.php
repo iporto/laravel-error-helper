@@ -113,11 +113,11 @@
             </div>
 
             <!-- Dados adicionais -->
-            @if (isset($extra) && is_array($extra) && count($extra) && (isset($extra['error']) || isset($extra['exception']) || isset($extra['trace'])))
+            @if (isset($extra) && is_array($extra) && count($extra) && (isset($extra['errors']) || isset($extra['exception']) || isset($extra['trace'])))
                 <div class="card card-yellow">
                     <h2>Dados adicionais do erro</h2>
 
-                    @foreach (['error' => 'Erro', 'exception' => 'Exception', 'trace' => 'Trace'] as $key => $label)
+                    @foreach (['errors' => 'Erro', 'exception' => 'Exception', 'trace' => 'Trace'] as $key => $label)
                         @if (isset($extra[$key]))
                             <details>
                                 <summary>{{ $label }}</summary>

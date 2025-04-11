@@ -36,7 +36,7 @@ Error::abort('Erro ao processar a solicitação');
 
 // Exibir erro com dados adicionais
 Error::abort('Erro ao processar o pagamento', [
-    'error' => [
+    'errors' => [
         'code' => 'PAYMENT_FAILED',
         'reason' => 'Fundos insuficientes'
     ],
@@ -128,7 +128,7 @@ class PaymentController extends Controller
         } catch (Exception $e) {
             // Usar o ErrorHelper para exibir erro personalizado
             Error::abort('Falha ao processar pagamento', [
-                'error' => [
+                'errors' => [
                     'code' => 'PAYMENT_PROCESSOR_ERROR',
                     'message' => $e->getMessage()
                 ],

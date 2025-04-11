@@ -57,7 +57,7 @@
           </div>
 
           <!-- Dados adicionais da API -->
-          @if (isset($extra) && is_array($extra) && count($extra) && (isset($extra['error']) || isset($extra['exception']) || isset($extra['trace'])))
+          @if (isset($extra) && is_array($extra) && count($extra) && (isset($extra['errors']) || isset($extra['exception']) || isset($extra['trace'])))
             <div class="overflow-hidden rounded-xl border border-yellow-200 bg-white shadow-sm transition-all duration-200 hover:shadow-md dark:border-yellow-900/30 dark:bg-gray-800">
               <div class="bg-yellow-50 px-6 py-4 dark:bg-yellow-900/20">
                 <h3 class="flex items-center gap-2 text-xl font-semibold text-yellow-800 dark:text-yellow-300">
@@ -68,12 +68,12 @@
                 </h3>
               </div>
               <div class="divide-y divide-gray-100 dark:divide-gray-700">
-                @foreach (['error' => 'Erro', 'exception' => 'Exception', 'trace' => 'Trace'] as $key => $label)
+                @foreach (['errors' => 'Erro', 'exception' => 'Exception', 'trace' => 'Trace'] as $key => $label)
                   @if (isset($extra[$key]))
                     <details class="group">
                       <summary class="flex cursor-pointer items-center justify-between px-6 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700/50">
                         <span class="flex items-center gap-2">
-                          @if ($key === 'error')
+                          @if ($key === 'errors')
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
