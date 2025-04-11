@@ -1,0 +1,32 @@
+{
+    "name": "iporto/laravel-error-helper",
+    "description": "Um helper para gerenciar erros 500 personalizados no Laravel com suporte a dados adicionais",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Seu Nome",
+            "email": "seu.email@exemplo.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "^9.0|^10.0|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "IPorto\\LaravelErrorHelper\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "IPorto\\LaravelErrorHelper\\ErrorHelperServiceProvider"
+            ],
+            "aliases": {
+                "Error": "IPorto\\LaravelErrorHelper\\Facades\\Error"
+            }
+        }
+    }
+}
