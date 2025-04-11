@@ -1,6 +1,6 @@
 # Laravel Error Helper
 
-Um helper simples para gerenciar erros 500 personalizados no Laravel com suporte a dados adicionais.
+Um helper simples para gerenciar erros 500 personalizados no Laravel com suporte a dados adicionais, desenvolvido pela iPORTO.
 
 ## Instalação
 
@@ -11,6 +11,18 @@ composer require iporto/laravel-error-helper
 ```
 
 O pacote é automaticamente registrado usando o auto-discovery do Laravel.
+
+## Publicar views de exemplo
+
+O pacote inclui templates de erro prontos para uso. Para publicá-los:
+
+```bash
+php artisan vendor:publish --tag=laravel-error-helper-views
+```
+
+Isso irá publicar:
+- `resources/views/errors/500.blade.php` - Template com Tailwind CSS (requer layout app)
+- `resources/views/errors/basic-500.blade.php` - Template independente sem dependências
 
 ## Uso
 
@@ -75,42 +87,68 @@ class Handler extends ExceptionHandler
 }
 ```
 
-## Requisitos da View
+Se você preferir usar o template básico sem dependências:
 
-A view de erro 500 (`resources/views/errors/500.blade.php`) deve estar preparada para receber e exibir os dados adicionais. Você pode usar o exemplo abaixo ou adaptar sua view existente:
+```php
+public function render($request, Throwable $e)
+{
+    if ($e instanceof CustomErrorException) {
+        return response()->view('errors.basic-500', [
+            'exception' => $e,
+            'extra' => $e->getExtraData(),
+            'request' => $request
+        ], 500);
+    }
 
-```blade
-@if (isset($extra) && is_array($extra) && count($extra))
-  <div class="error-details">
-    <h2>Detalhes adicionais do erro</h2>
-    
-    @foreach (['error' => 'Erro', 'exception' => 'Exception', 'trace' => 'Trace'] as $key => $label)
-      @if (isset($extra[$key]))
-        <details>
-          <summary>{{ $label }}</summary>
-          <div>
-            @if (is_array($extra[$key]))
-              @if ($key === 'trace')
-                <ol>
-                  @foreach ($extra[$key] as $item)
-                    <li>{{ is_array($item) ? json_encode($item, JSON_UNESCAPED_UNICODE) : $item }}</li>
-                  @endforeach
-                </ol>
-              @else
-                @foreach ($extra[$key] as $subKey => $value)
-                  <p><strong>{{ ucfirst($subKey) }}:</strong> {{ is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : $value }}</p>
-                @endforeach
-              @endif
-            @else
-              <p>{{ $extra[$key] }}</p>
-            @endif
-          </div>
-        </details>
-      @endif
-    @endforeach
-  </div>
-@endif
+    return parent::render($request, $e);
+}
 ```
+
+## Exemplo de implementação
+
+Aqui está um exemplo completo de como você pode usar o pacote em seu controller:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use IPorto\LaravelErrorHelper\Facades\Error;
+use Exception;
+
+class PaymentController extends Controller
+{
+    public function processPayment()
+    {
+        try {
+            // Simula uma tentativa de pagamento...
+            // throw new Exception("Gateway de pagamento indisponível");
+            
+            return redirect()->route('success');
+        } catch (Exception $e) {
+            // Usar o ErrorHelper para exibir erro personalizado
+            Error::abort('Falha ao processar pagamento', [
+                'error' => [
+                    'code' => 'PAYMENT_PROCESSOR_ERROR',
+                    'message' => $e->getMessage()
+                ],
+                'exception' => [
+                    'class' => get_class($e),
+                    'code' => $e->getCode()
+                ],
+                'trace' => [
+                    'request_id' => request()->header('X-Request-ID'),
+                    'timestamp' => now()->toIso8601String()
+                ]
+            ]);
+        }
+    }
+}
+```
+
+## Personalização
+
+Você pode personalizar completamente a visualização dos erros editando os arquivos publicados em `resources/views/errors/`.
 
 ## Licença
 
