@@ -25,6 +25,9 @@ class ErrorHelperServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        
+        // Publicar as views de exemplo
+        $this->publishes([
+            __DIR__.'/../resources/views/errors' => resource_path('views/errors'),
+        ], 'laravel-error-helper-views');
     }
 }
